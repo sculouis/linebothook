@@ -14,7 +14,7 @@ def scheduled_job():
         print(key, value)
 
 trigger = OrTrigger([
-   CronTrigger(hour='10-20', minute='*/20')
+   CronTrigger(hour='10-20', minute='*/25')
 ])
 
 sched.add_job(scheduled_job, trigger)
