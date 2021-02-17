@@ -77,6 +77,9 @@ def make_static_tmp_dir():
         else:
             raise
 
+@app.route("/")
+def hello_world():
+    return render_template("index.html") 
 
 @app.route("/callback", methods=['POST'])
 def callback():
