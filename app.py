@@ -23,7 +23,7 @@ import tempfile
 import configparser
 from argparse import ArgumentParser
 
-from flask import Flask, request, abort, send_from_directory
+from flask import Flask, request, abort, send_from_directory,render_template
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from linebot import (
