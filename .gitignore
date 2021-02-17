@@ -125,4 +125,4 @@ venv.bak/
 dmypy.json
 
 #config
-config.ini
+#config.ini
