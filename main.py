@@ -12,7 +12,7 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,StickerMessage
 )
 
-app = Flask(__name__)
+app = Flask(__name__,static_folder="./build",static_url_path="/")
 
 # LINE 聊天機器人的基本資料
 config = configparser.ConfigParser()
@@ -26,7 +26,7 @@ handler = WebhookHandler(secret)
 
 @app.route("/")
 def hello_world():
-    return render_template("index.html") 
+    return app.send_static_file("index.html")
 
 @app.route("/callback", methods=['POST'])
 def callback():
