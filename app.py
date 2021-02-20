@@ -67,7 +67,7 @@ handler = WebhookHandler(secret)
 
 @app.route("/")
 def hello_world():
-    return app.send_static_file("/static/index.html") 
+    return app.send_static_file("./static/index.html") 
 
 @app.route("/callback", methods=['POST'])
 def callback():
