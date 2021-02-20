@@ -12,7 +12,7 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,StickerMessage
 )
 
-app = Flask(__name__,static_folder="./build",static_url_path="/")
+app = Flask(__name__,static_folder="./static",static_url_path="/")
 
 # LINE 聊天機器人的基本資料
 config = configparser.ConfigParser()
