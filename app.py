@@ -49,7 +49,7 @@ from linebot.models import (
     SeparatorComponent, QuickReply, QuickReplyButton,
     ImageSendMessage)
 
-app = Flask(__name__,static_folder="./static",static_url_path="/")
+app = Flask(__name__,static_folder="./build",static_url_path="/")
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_host=1, x_proto=1)
 
 # get channel_secret and channel_access_token from your environment variable
@@ -67,7 +67,7 @@ handler = WebhookHandler(secret)
 
 @app.route("/")
 def hello_world():
-    return app.send_static_file("./static/index.html") 
+    return app.send_static_file("index.html") 
 
 @app.route("/callback", methods=['POST'])
 def callback():
