@@ -49,7 +49,7 @@ from linebot.models import (
     SeparatorComponent, QuickReply, QuickReplyButton,
     ImageSendMessage)
 
-app = Flask(__name__,static_folder="./static")
+app = Flask(__name__,static_folder="./static",static_url_path="/static")
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_host=1, x_proto=1)
 
 # get channel_secret and channel_access_token from your environment variable
