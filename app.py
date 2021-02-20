@@ -49,7 +49,7 @@ from linebot.models import (
     SeparatorComponent, QuickReply, QuickReplyButton,
     ImageSendMessage)
 
-app = Flask(__name__,static_folder="./build",static_url_path="/")
+app = Flask(__name__,static_folder="./static",static_url_path="/")
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_host=1, x_proto=1)
 
 # get channel_secret and channel_access_token from your environment variable
@@ -64,18 +64,6 @@ if secret is None or token is None:
 line_bot_api = LineBotApi(token)
 handler = WebhookHandler(secret)
 
-static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
-
-
-# function for create tmp dir for download content
-def make_static_tmp_dir():
-    try:
-        os.makedirs(static_tmp_path)
-    except OSError as exc:
-        if exc.errno == errno.EEXIST and os.path.isdir(static_tmp_path):
-            pass
-        else:
-            raise
 
 @app.route("/")
 def hello_world():
@@ -680,8 +668,4 @@ if __name__ == "__main__":
     arg_parser.add_argument('-p', '--port', type=int, default=5000, help='port')
     arg_parser.add_argument('-d', '--debug', default=False, help='debug')
     options = arg_parser.parse_args()
-
-    # create tmp dir for download content
-    make_static_tmp_dir()
-
     app.run(debug=options.debug, port=options.port)
