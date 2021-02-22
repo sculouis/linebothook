@@ -100,7 +100,7 @@ def add_message_log(event,SourceUser):
         print(profile.display_name)
         print(profile.status_message)
         print(event.message.text)
-        DATABASE_URL = os.environ('DATABASE_URL')
+        DATABASE_URL = os.environ['DATABASE_URL']
         conn = psycopg2.connect(DATABASE_URL,sslmode="require")
         cursor = conn.cursor()
         cursor.execute("INSERT INTO messagelog(user_id,display_name,text_message) VALUES(%s,%s,%s)",(profile.user_id,profile.display_name,event.message.text))
