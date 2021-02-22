@@ -22,6 +22,7 @@ import sys
 import tempfile
 import configparser
 from argparse import ArgumentParser
+import psycopg2
 
 from flask import Flask, request, abort, send_from_directory,render_template
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -92,12 +93,21 @@ def callback():
     return 'OK'
 
 def add_message_log(event,SourceUser):
+    """寫入訊息資料到資料庫"""
     if isinstance(event.source, SourceUser):
         profile = line_bot_api.get_profile(event.source.user_id)
         print(profile.user_id)
         print(profile.display_name)
         print(profile.status_message)
         print(event.message.text)
+        DATABASE_URL = os.environ('DATABASE_URL')
+        conn = psycopg2.connect(DATABASE_URL,sslmode="require")
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO messagelog(user_id,display_name,text_message) VALUES(%s,%s,%s)",(profile.user_id,profile.display_name,event.message.text))
+        conn.commit()
+        cursor.close()
+        conn.close()
+
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
