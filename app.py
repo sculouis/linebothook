@@ -92,6 +92,15 @@ def callback():
 
     return 'OK'
 
+@app.route("/messagelog")
+def get_message_log():
+    DATABASE_URL = os.environ['DATABASE_URL']
+    conn = psycopg2.connect(DATABASE_URL,sslmode="require")
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM public.messagelog")
+    rows = cursor.fetchall()
+    return rows
+
 def add_message_log(event,SourceUser):
     """寫入訊息資料到資料庫"""
     if isinstance(event.source, SourceUser):
