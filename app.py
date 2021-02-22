@@ -14,7 +14,7 @@
 
 from __future__ import unicode_literals
 
-import datetime
+from datetime import datetime,timezone
 import errno
 import json
 import os
@@ -100,10 +100,11 @@ def add_message_log(event,SourceUser):
         print(profile.display_name)
         print(profile.status_message)
         print(event.message.text)
+        dt = datetime.now(timezone.utc)
         DATABASE_URL = os.environ['DATABASE_URL']
         conn = psycopg2.connect(DATABASE_URL,sslmode="require")
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO messagelog(user_id,display_name,text_message) VALUES(%s,%s,%s)",(profile.user_id,profile.display_name,event.message.text))
+        cursor.execute("INSERT INTO messagelog(user_id,display_name,text_message,created_on) VALUES(%s,%s,%s,%s)",(profile.user_id,profile.display_name,event.message.text,dt))
         conn.commit()
         cursor.close()
         conn.close()
