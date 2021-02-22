@@ -24,7 +24,7 @@ import configparser
 from argparse import ArgumentParser
 import psycopg2
 
-from flask import Flask, request, abort, send_from_directory,render_template
+from flask import Flask, request, abort, send_from_directory,render_template,jsonify
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from linebot import (
@@ -99,7 +99,7 @@ def get_message_log():
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM public.messagelog")
     rows = cursor.fetchall()
-    return rows
+    return jsonify(rows)
 
 def add_message_log(event,SourceUser):
     """寫入訊息資料到資料庫"""
