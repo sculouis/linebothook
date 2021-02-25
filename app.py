@@ -26,6 +26,30 @@ import psycopg2
 
 from flask import Flask, request, abort, send_from_directory,render_template,jsonify
 from werkzeug.middleware.proxy_fix import ProxyFix
+from sqlalchemy import create_engine  
+from sqlalchemy import Column, String,Integer,TIMESTAMP
+from sqlalchemy.ext.declarative import declarative_base  
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.dialects.postgresql import JSON
+from marshmallow import Schema,fields
+
+# db_string = "postgres://cnikcfhnuppdda:8fb7381467781c2fb2d730b4ddc4ff8eab61d09f1c3399cca3b511fc121702e8@ec2-54-237-143-127.compute-1.amazonaws.com:5432/dbpqg8a3cs82sm"
+db_string = os.environ['DATABASE_URL']
+db = create_engine(db_string)  
+base = declarative_base()
+
+class MessageLog(base):  
+    __tablename__ = 'messagelog'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(String)
+    display_name = Column(String)
+    text_message = Column(String)
+    created_on = Column(TIMESTAMP)
+
+Session = sessionmaker(db)  
+session = Session()
+
+base.metadata.create_all(db)    
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -94,12 +118,22 @@ def callback():
 
 @app.route("/messagelog")
 def get_message_log():
-    DATABASE_URL = os.environ['DATABASE_URL']
-    conn = psycopg2.connect(DATABASE_URL,sslmode="require")
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM public.messagelog")
-    rows = cursor.fetchall()
-    return jsonify(rows)
+    # DATABASE_URL = os.environ['DATABASE_URL']
+    # conn = psycopg2.connect(DATABASE_URL,sslmode="require")
+    # cursor = conn.cursor()
+    # cursor.execute("SELECT * FROM public.messagelog")
+    # rows = cursor.fetchall()
+    # return jsonify(rows)
+    # Read
+    MessageSchema = Schema.from_dict({"id":fields.Int(),"user_id":fields.Str(),"display_name":fields.Str(),"text_message":fields.Str(),"created_on":fields.DateTime()})
+    schema = MessageSchema()
+    messagelogs = session.query(MessageLog).all()  
+    for message in iter(messagelogs):
+        print(schema.dump(message))  
+    # print(message.display_name)
+    result =[schema.dump(message) for message in messagelogs]
+    return json.dumps(result,ensure_ascii=False)
+
 
 def add_message_log(event,SourceUser):
     """寫入訊息資料到資料庫"""
