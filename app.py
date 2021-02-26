@@ -32,6 +32,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.dialects.postgresql import JSON
 from marshmallow import Schema,fields
+from flask_cors import CORS
 
 # db_string = "postgres://cnikcfhnuppdda:8fb7381467781c2fb2d730b4ddc4ff8eab61d09f1c3399cca3b511fc121702e8@ec2-54-237-143-127.compute-1.amazonaws.com:5432/dbpqg8a3cs82sm"
 db_string = os.environ['DATABASE_URL']
@@ -75,6 +76,7 @@ from linebot.models import (
     ImageSendMessage)
 
 app = Flask(__name__,static_folder="./static",static_url_path="/")
+CORS(app)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_host=1, x_proto=1)
 
 # get channel_secret and channel_access_token from your environment variable
